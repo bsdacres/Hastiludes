@@ -1,0 +1,13 @@
+.inventory{
+    height: 80vh;
+    width: 30vw;
+    border-radius: 10px;
+    box-shadow: 10px 5px 5px black;
+    backdrop-filter: blur(20px);
+    background-color: rgba(227, 227, 227, 0.119);
+    z-index: 10;
+    color: white;
+    position: absolute;
+    top: 10vh;
+    left: 5vw;
+}
