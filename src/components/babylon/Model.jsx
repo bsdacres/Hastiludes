@@ -73,7 +73,7 @@ function setupPointerLock()
     ground.material = groundmat
     groundmat.metallic = 0;
     groundmat.roughness = 1;
-    groundmat.albedoTexture.uScale = 200;
+    groundmat.albedoTexture.uScale = 199;
     groundmat.albedoTexture.vScale = 200;
 
 
