@@ -59,7 +59,7 @@ export const CharacterCreator = (props) => {
         let hero = player[0];
         skeletons = res.skeleton;
         hero.rotation.y  =  Math.PI
-        hero.position.x = +.8
+        hero.position.x = +.75
         hero.lookAt(camera.position)
         hero.rotation.x =0
         
