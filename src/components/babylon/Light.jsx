@@ -8,7 +8,6 @@ export const Light = () => {
     console.log('Light.tsx: createEffect')
 
     const scene = await getScene()
-
     // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
     const light = new BABYLON.HemisphericLight(
       'light1',

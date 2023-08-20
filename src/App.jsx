@@ -10,8 +10,7 @@ import InventoryUI from './components/UI/InventoryUI';
 function App() {
   return (
     <>
-      <Light />
-      <Model file="GirlAnimation.glb" />
+      <Character file = "GirlAnimation.glb"/>
     </>
   );
 }

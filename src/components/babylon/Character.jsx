@@ -35,7 +35,7 @@ export const Character = () => {
         
         //variables
         var animationBlend = 0.005;
-        var mouseSensitivity = 0.002;
+        var mouseSensitivity = 0.005;
         var cameraSpeed = 0.0075;
         var walkSpeed = 0.001;
         var runSpeed = 0.005;
@@ -83,7 +83,13 @@ export const Character = () => {
         
             var dirLight = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -0.5, -1.0), scene);
             dirLight.position = new BABYLON.Vector3(0, 130, 130);
-        
+
+            var skybox = BABYLON.Mesh.CreateBox("skyBox", 5000.0, scene);
+            let lighting = BABYLON.CubeTexture.CreateFromPrefilteredData("environment4.env", scene);
+            lighting.name = "runyonCanyon";
+            scene.environmentTexture = lighting;
+            console.log(scene.environmentIntensity)
+            scene.createDefaultSkybox(scene.environmentTexture, true, (scene.activeCamera.maxZ - scene.activeCamera.minZ)/2, 0.3, false);
         
             // Shadows
             var shadowGenerator = new BABYLON.ShadowGenerator(3072, dirLight);
@@ -95,7 +101,6 @@ export const Character = () => {
                 enableGroundMirror: true,
                 groundMirrorFallOffDistance: 0,
                 groundSize: 150,
-                skyboxSize: 150,
             });
             helper.setMainColor(scene.clearColor);
             helper.groundMaterial.diffuseTexture = null;
@@ -200,14 +205,10 @@ export const Character = () => {
             //character
             engine.displayLoadingUI();
             
-            BABYLON.SceneLoader.ImportMesh("", "", ybotURL, scene, function (newMeshes, particleSystems, skeletons)
-            {
-                skeleton = skeletons[0];
-                var body = newMeshes[1];
-                var joints = newMeshes[0];
-                body.scaling = new BABYLON.Vector3(0.01, 0.01, 0.01);
-                body.rotation.y = BABYLON.Tools.ToRadians(180);
-                joints.parent = body;
+            BABYLON.SceneLoader.ImportMeshAsync("", "/", "GirlAnimation.glb" , scene).then((res)=>{
+                skeleton = res.skeletons[0];
+                var body = res.meshes[0];
+                
                 body.parent = character;
         
                 // BABYLON.SceneLoader.ImportMesh("", "", m4URL, scene, function (newMeshes)
@@ -230,26 +231,19 @@ export const Character = () => {
                 
         
         
-                body.material = new BABYLON.StandardMaterial("character", scene);
-                joints.material = new BABYLON.StandardMaterial("joints", scene);
-                body.material.diffuseColor = new BABYLON.Color3(0.81, 0.24, 0.24);
-                joints.material.emissiveColor = new BABYLON.Color3(0.19, 0.29, 0.44);
+          
         
         
                 addToMirror(character);
                 addShadows(character);
         
         
-                var idleRange = skeleton.getAnimationRange("None_Idle");
-                var walkRange = skeleton.getAnimationRange("None_Walk");
-                var runRange = skeleton.getAnimationRange("None_Run");
-                var sprintRange = skeleton.getAnimationRange("None_Sprint");
-                var jumpRange = skeleton.getAnimationRange("None_Jump");
+
         
-                idleAnim = scene.beginWeightedAnimation(skeleton, idleRange.from+1, idleRange.to, 1.0, true);
-                walkAnim = scene.beginWeightedAnimation(skeleton, walkRange.from+1, walkRange.to, 0, true);
-                runAnim = scene.beginWeightedAnimation(skeleton, runRange.from+1, runRange.to, 0, true);
-                sprintAnim = scene.beginWeightedAnimation(skeleton, sprintRange.from+1, sprintRange.to, 0, true);
+                idleAnim = res.animationGroups[1];
+                walkAnim = res.animationGroups[3];
+                runAnim = res.animationGroups[3];
+                sprintAnim = res.animationGroups[3];
                 //jumpAnim = scene.beginWeightedAnimation(skeleton, jumpRange.from+1, jumpRange.to, 0, true);
                 
         
@@ -276,7 +270,8 @@ export const Character = () => {
         
         
                 engine.hideLoadingUI();
-            }, function(evt){} );
+            }) 
+       
         
         
         
@@ -350,7 +345,7 @@ export const Character = () => {
                 );
             }
         
-        
+     
             function thirdPersonMovement(up, down, left, right, jump, run)
             {
                 var directionZ = up-down;

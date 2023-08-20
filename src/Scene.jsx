@@ -36,8 +36,7 @@ export async function createScene() {
   const engine = new BABYLON.WebGPUEngine(canvas, {antialias:true});
   await engine.initAsync()
   const scene = new BABYLON.Scene(await engine)
- 
-  
+  scene.useRightHandedSystem = true; 
   const havokInstance = await HK();
 
   scene.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), new BABYLON.HavokPlugin(undefined,havokInstance));
